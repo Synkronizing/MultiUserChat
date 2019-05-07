@@ -43,7 +43,8 @@ public class ServerWorker extends Thread{
             if(tokens != null && tokens.length>0){
                 String cmd = tokens[0];
 
-                if("quit".equalsIgnoreCase(line)){
+                if("logoff".equalsIgnoreCase(cmd) || "quit".equalsIgnoreCase(cmd)){
+                    handleLogOff();
                     break;
                 } else if ("login".equalsIgnoreCase(cmd)){
                     handleLogin(outputStream,tokens);
@@ -52,6 +53,18 @@ public class ServerWorker extends Thread{
                     String msg = "unknown "+cmd+"\n\r";
                     outputStream.write(msg.getBytes());
                 }
+            }
+        }
+        clientSocket.close();
+    }
+
+    private void handleLogOff() throws IOException {
+        List<ServerWorker> workerList = server.getWorkerList();
+        // send other online users current status
+        String onlineMsg = "offline "+ login+"\n";
+        for(ServerWorker worker : workerList){
+            if(!login.equals(worker.getLogin())) {
+                worker.send(onlineMsg);
             }
         }
         clientSocket.close();
@@ -68,32 +81,43 @@ public class ServerWorker extends Thread{
             String password = tokens[2];
             if(login.equals("guest")&& password.equals("guest") || (login.equals("jim") && password.equals("bob"))){
                 String msg = "ok login\n\r";
-                try {
-                    outputStream.write(msg.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                outputStream.write(msg.getBytes());
+
                 this.login = login;
                 System.out.println("User logged in successfully "+ login);
-                String onlineMsg = "online "+ login+"\n";
+
                 List<ServerWorker> workerList = server.getWorkerList();
+
+                //send current user all other online logins
+                for(ServerWorker worker: workerList){
+                    if(worker.getLogin()!= null) {  // to not show null login for other users
+                        if(!login.equals(worker.getLogin())) { // doesn't show that I am online to myself
+                            String msg2 = "online " + worker.getLogin() + "\n";
+                            send(msg2);
+                        }
+                    }
+                }
+
+                // send other online users current status
+                String onlineMsg = "online "+ login+"\n";
                 for(ServerWorker worker : workerList){
-                    worker.send(onlineMsg);
+                    if(!login.equals(worker.getLogin())) {
+                        worker.send(onlineMsg);
+                    }
                 }
             }else{
                 String msg = "error login\n\r";
-                try {
-                    outputStream.write(msg.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                outputStream.write(msg.getBytes());
+
             }
         }
 
     }
 
     private void send(String msg) throws IOException {
-        outputStream.write(msg.getBytes());
+        if(login != null) {
+            outputStream.write(msg.getBytes());
+        }
     }
 
 }
