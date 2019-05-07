@@ -4,11 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Date;
 import java.util.List;
 
 public class ServerWorker extends Thread{
-    private static Socket clientSocket;
+
+    private final Socket clientSocket;
     private final Server server;
     private String login = null;
     private OutputStream outputStream;
@@ -102,6 +102,7 @@ public class ServerWorker extends Thread{
                 String onlineMsg = "online "+ login+"\n";
                 for(ServerWorker worker : workerList){
                     if(!login.equals(worker.getLogin())) {
+
                         worker.send(onlineMsg);
                     }
                 }
@@ -114,9 +115,9 @@ public class ServerWorker extends Thread{
 
     }
 
-    private void send(String msg) throws IOException {
+    private void send(String onlineMsg) throws IOException {
         if(login != null) {
-            outputStream.write(msg.getBytes());
+            outputStream.write(onlineMsg.getBytes());
         }
     }
 
