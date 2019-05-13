@@ -26,7 +26,7 @@ public class Server extends Thread{
             while(true) {
                 System.out.println("About to accept client connection...");
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Accepted connection from"+ clientSocket);
+                System.out.println("Accepted connection from "+ clientSocket);
                 ServerWorker worker = new ServerWorker(this,clientSocket);
                 workerList.add(worker);
                 worker.start();
