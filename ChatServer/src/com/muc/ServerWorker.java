@@ -131,7 +131,7 @@ public class ServerWorker extends Thread{
             String login = tokens[1];
             String password = tokens[2];
             if(login.equals("guest")&& password.equals("guest") || (login.equals("jim") && password.equals("bob"))){
-                String msg = "ok login\n\r";
+                String msg = "ok login\n";
                 outputStream.write(msg.getBytes());
 
                 this.login = login;
@@ -158,9 +158,9 @@ public class ServerWorker extends Thread{
                     }
                 }
             }else{
-                String msg = "error login\n\r";
+                String msg = "error login\n";
                 outputStream.write(msg.getBytes());
-                System.out.printf("Login failed for "+ login);
+                System.err.println("Login failed for "+ login);
 
             }
         }
