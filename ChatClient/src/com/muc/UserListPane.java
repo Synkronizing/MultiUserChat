@@ -2,6 +2,8 @@ package com.muc;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class UserListPane extends JPanel implements UserStatusListener {
@@ -17,8 +19,28 @@ public class UserListPane extends JPanel implements UserStatusListener {
         userListUI = new JList<>(userListModel);
         setLayout(new BorderLayout());
         add(new JScrollPane(userListUI),BorderLayout.CENTER);
+
+        userListUI.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount() > 1){
+                    String login = userListUI.getSelectedValue();
+                    MessagePane messagePane = new MessagePane(client, login);
+
+                    JFrame f = new JFrame("Message: "+ login);
+                    f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    f.setSize(500, 500);
+                    f.getContentPane().add(messagePane,BorderLayout.CENTER);
+                    f.setVisible(true);
+                }
+            }
+        });
     }
 
+    /**
+     * creates the functioning panel
+     * @param args
+     */
     public static void main(String[] args) {
         ChatClient client = new ChatClient("localhost",8818);
 
@@ -39,6 +61,11 @@ public class UserListPane extends JPanel implements UserStatusListener {
         }
     }
 
+    /**
+     *
+     * @param login
+     * when someone logs in the person is displayed in the JPanel
+     */
     @Override
     public void online(String login) {
         userListModel.addElement(login); //If a user logs in then their name is displayed in the user list

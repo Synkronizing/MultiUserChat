@@ -50,7 +50,7 @@ public class ChatClient {
             if(client.login("guest","guest")){
                 System.out.println("Login Successful");
 
-                client.msg("jim", "Hello world");
+                client.msg("josh", "Hello world");
             }else{
                 System.out.println("Login failed");
             }
