@@ -6,6 +6,9 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class ChatClient {
     private final String serverName;
     private final int serverPort;
@@ -22,6 +25,11 @@ public class ChatClient {
     this.serverPort = serverPort;
     }
 
+    /**
+     * shows when someone logs in or off
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         ChatClient client = new ChatClient("localhost",8818);
         client.addUserStatusListener(new UserStatusListener() {
@@ -59,16 +67,33 @@ public class ChatClient {
         }
     }
 
+    /**
+     * sends message to specifc user
+     * @param sendTo
+     * @param msgBody
+     * @throws IOException
+     */
     public void msg(String sendTo, String msgBody) throws IOException {
         String cmd = "msg " + sendTo + " " + msgBody + "\n";
         serverOut.write(cmd.getBytes());
     }
 
+    /**
+     * handles logoff
+     * @throws IOException
+     */
     public void logOff() throws IOException {
         String cmd = "logoff\n";
         serverOut.write(cmd.getBytes());
     }
 
+    /**
+     * handles login of a user
+     * @param login
+     * @param password
+     * @return
+     * @throws IOException
+     */
     public boolean login(String login, String password) throws IOException {
         String cmd = "login "+login +" "+password + "\n";
         serverOut.write(cmd.getBytes());
@@ -147,6 +172,10 @@ public class ChatClient {
         }
     }
 
+    /**
+     * returns true if connect to socket
+     * @return
+     */
     public boolean connect() {
         try {
             this.socket = new Socket(serverName, serverPort);

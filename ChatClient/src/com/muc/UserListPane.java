@@ -6,6 +6,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
+/**
+ * Creates JPanel to see online users
+ */
+
 public class UserListPane extends JPanel implements UserStatusListener {
     private final ChatClient client;
     private JList<String> userListUI;
@@ -21,6 +25,11 @@ public class UserListPane extends JPanel implements UserStatusListener {
         add(new JScrollPane(userListUI),BorderLayout.CENTER);
 
         userListUI.addMouseListener(new MouseAdapter() {
+            /**
+             * when name is clicked open new message pane
+             * @param e
+             *
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount() > 1){
@@ -40,9 +49,10 @@ public class UserListPane extends JPanel implements UserStatusListener {
     /**
      * creates the functioning panel
      * @param args
+     *
      */
     public static void main(String[] args) {
-        ChatClient client = new ChatClient("localhost",8818);
+        ChatClient client = new ChatClient("localhost",8819);
 
         UserListPane userListPane = new UserListPane(client);
         JFrame frame = new JFrame("User List");
@@ -62,9 +72,9 @@ public class UserListPane extends JPanel implements UserStatusListener {
     }
 
     /**
-     *
-     * @param login
      * when someone logs in the person is displayed in the JPanel
+     * @param login
+     *
      */
     @Override
     public void online(String login) {

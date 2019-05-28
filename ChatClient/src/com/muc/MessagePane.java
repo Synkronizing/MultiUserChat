@@ -6,6 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+/**
+ * Create the GUI JPanel to send messages
+ */
+
 public class MessagePane extends JPanel implements MessageListener {
     private final ChatClient client;
     private final String login;
@@ -16,6 +20,12 @@ public class MessagePane extends JPanel implements MessageListener {
     private JList<String> messageList = new JList<>(listModel);
     private JTextField inputField = new JTextField();
 
+    /**
+     * new Pane allowing guest to send messages and recieve messages from pane
+     * @param client
+     * @param login
+     *
+     */
     public MessagePane(ChatClient client, String login){
         this.client = client;
         this.login = login;
@@ -40,6 +50,12 @@ public class MessagePane extends JPanel implements MessageListener {
             }
         });
     }
+
+    /**
+     * displays recieved message in pane
+     * @param fromLogin
+     * @param msgBody
+     */
     public void onMessage(String fromLogin, String msgBody){
         if(login.equalsIgnoreCase(fromLogin)) {
             String line = fromLogin + ": " + msgBody;

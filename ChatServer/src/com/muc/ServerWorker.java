@@ -7,6 +7,9 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * telnet messages between users
+ */
 public class ServerWorker extends Thread{
 
     private final Socket clientSocket;
@@ -15,6 +18,11 @@ public class ServerWorker extends Thread{
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
 
+    /**
+     * gets server and socket
+     * @param server
+     * @param clientSocket
+     */
     public ServerWorker(Server server, Socket clientSocket)
     {
         this.server = server;
@@ -32,7 +40,12 @@ public class ServerWorker extends Thread{
             }
         }
 
-
+    /**
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * handles all of the cmds
+     */
     private void handleClientSocket() throws IOException, InterruptedException {
         InputStream inputStream = clientSocket.getInputStream();
         this.outputStream = clientSocket.getOutputStream();
@@ -73,7 +86,7 @@ public class ServerWorker extends Thread{
             topicSet.remove(topic);
         }
     }
-
+    
     public boolean isMemberOfTopic(String topic){
         return topicSet.contains(topic);
     }
@@ -109,7 +122,13 @@ public class ServerWorker extends Thread{
         }
     }
 
+    /**
+     *
+     * @throws IOException
+     * removes worker from server when logoff
+     */
     private void handleLogOff() throws IOException {
+        server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
         // send other online users current status
         String onlineMsg = "offline "+ login+"\n";
